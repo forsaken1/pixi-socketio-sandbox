@@ -3,18 +3,8 @@ var renderer = new PIXI.WebGLRenderer(800, 600);
 
 document.body.appendChild(renderer.view);
 
-var stage = new PIXI.Stage;
-
 var bunnyTexture = PIXI.Texture.fromImage("images/bunny.png");
-var bunny = new PIXI.Sprite(bunnyTexture);
-
-bunny.position.x = 0;
-bunny.position.y = 0;
-
-bunny.scale.x = 1;
-bunny.scale.y = 1;
-
-stage.addChild(bunny);
+var stage = new PIXI.Stage;
 
 requestAnimationFrame(animate);
 
@@ -24,4 +14,27 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-var socket = io();
+var socket = io()
+
+socket.on('step', function(msg){
+  while(stage.children[0]) { stage.removeChild(stage.children[0]); }
+  users = eval(msg)
+
+  for(var i in users)
+  {
+    user = users[i]
+    if(!user)
+      continue
+
+    var bunny = new PIXI.Sprite(bunnyTexture)
+
+    bunny.position.x = user.x
+    bunny.position.y = user.y
+
+    stage.addChild(bunny)
+  }
+})
+
+document.addEventListener('keypress', function(event){
+  socket.emit('move', { keyCode: event.keyCode })
+});
