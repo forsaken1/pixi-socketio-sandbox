@@ -23,3 +23,5 @@ function animate() {
 
     requestAnimationFrame(animate);
 }
+
+var socket = io();

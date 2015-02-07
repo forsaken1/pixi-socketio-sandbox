@@ -8,7 +8,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: 'node_modules/pixi.js/bin/pixi.js',
-        dest: 'public/grunt/javascripts/pixi.js',
+        dest: 'public/javascripts/compiled.js',
       },
     },
   });

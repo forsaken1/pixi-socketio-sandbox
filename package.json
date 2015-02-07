@@ -6,7 +6,8 @@
     "express": "2.5.8",
     "jade": ">= 0.0.1",
     "jquery": "",
-    "pixi.js": ""
+    "pixi.js": "",
+    "socket.io": "^1.3.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
