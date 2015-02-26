@@ -30,8 +30,42 @@ app.configure('production', function(){
 
 // Logic
 
-function User(id)
-{
+function Game() {
+  $this = this
+  this.users = []
+
+  this.step = function() {
+    io.emit('step', JSON.stringify($this.users))
+  }
+
+  this.init_io = function() {
+    io.on('connection', function(socket){
+      console.log('a user connected')
+      var id = $this.users.length
+      var user = new User(id)
+      $this.users[id] = user
+      $this.step()
+
+      socket.on('move', function(msg) {
+        user.move(msg.keyCode)
+        $this.step()
+        console.log('user moved')
+      })
+
+      socket.on('disconnect', function(){
+        $this.users[id] = null
+        $this.step()
+        console.log('user disconnected')
+      })
+    })
+  }
+
+  this.start = function() {
+    $this.init_io()
+  }
+}
+
+function User(id) {
   SPEED = 10
   this.id = id
   this.x = Math.floor((Math.random() * 700) + 1)
@@ -55,37 +89,13 @@ function User(id)
   }
 }
 
-var users = []
-
-function step()
-{
-  io.emit('step', JSON.stringify(users))
-}
-
 // Routes
 
 app.get('/', routes.index)
 
-io.on('connection', function(socket){
-  console.log('a user connected')
-  var id = users.length
-  var user = new User(id)
-  users[id] = user
-  step()
-
-  socket.on('move', function(msg) {
-    user.move(msg.keyCode)
-    step()
-    console.log('user moved')
-  })
-
-  socket.on('disconnect', function(){
-    users[id] = null
-    step()
-    console.log('user disconnected')
-  })
-})
-
 app.listen(3001, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 })
+
+var game = new Game()
+game.start()
