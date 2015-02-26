@@ -28,67 +28,6 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Logic
-
-function Game() {
-  $this = this
-  this.users = []
-
-  this.step = function() {
-    io.emit('step', JSON.stringify($this.users))
-  }
-
-  this.init_io = function() {
-    io.on('connection', function(socket){
-      console.log('a user connected')
-      var id = $this.users.length
-      var user = new User(id)
-      $this.users[id] = user
-      $this.step()
-
-      socket.on('move', function(msg) {
-        user.move(msg.keyCode)
-        $this.step()
-        console.log('user moved')
-      })
-
-      socket.on('disconnect', function(){
-        $this.users[id] = null
-        $this.step()
-        console.log('user disconnected')
-      })
-    })
-  }
-
-  this.start = function() {
-    $this.init_io()
-  }
-}
-
-function User(id) {
-  SPEED = 10
-  this.id = id
-  this.x = Math.floor((Math.random() * 700) + 1)
-  this.y = Math.floor((Math.random() * 500) + 1)
-  this.move = function(keyCode){
-    switch(keyCode)
-    {
-      case 37:
-        this.x -= SPEED
-      break
-      case 38:
-        this.y -= SPEED
-      break
-      case 39:
-        this.x += SPEED
-      break
-      case 40:
-        this.y += SPEED
-      break
-    }
-  }
-}
-
 // Routes
 
 app.get('/', routes.index)
@@ -97,5 +36,5 @@ app.listen(3001, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 })
 
-var game = new Game()
+var game = require('./game/game.js').Game(io, require('./game/user.js').User)
 game.start()
