@@ -1,8 +1,11 @@
 function Game() {
   $game = this
+  var BLOCK_SIZE = 50;
+
   this.map = [[]]
   this.users = []
   this.stage = null
+  this.key_down_code = undefined
 
   this.init_pixi = function() {
     var renderer = new PIXI.WebGLRenderer(800, 600);
@@ -22,8 +25,18 @@ function Game() {
   }
 
   this.init_event_listeners = function() {
-    document.addEventListener('keypress', function(event) {
-      $game.socket.emit('move', { keyCode: event.keyCode })
+    var direction = { 37: 'l', 38: 'u', 39: 'r', 40: 'd' }
+
+    document.addEventListener('keydown', function(event) {
+      $game.socket.emit('move_start', { direction: direction[event.keyCode] })
+      $game.key_down_code = event.keyCode
+    });
+
+    document.addEventListener('keyup', function(event) {
+      if($game.key_down_code == event.keyCode) {
+        $game.socket.emit('move_stop')
+        $game.key_down_code = undefined
+      }
     });
   }
 
@@ -33,12 +46,12 @@ function Game() {
     $game.socket.on('send_map', $game.send_map)
   }
 
-  this.clearStage = function() {
+  this.clear_stage = function() {
     while($game.stage.children[0]) { $game.stage.removeChild($game.stage.children[0]); }
   }
 
   this.tick = function(msg) {
-    $game.clearStage()
+    $game.clear_stage()
     $game.users = eval(msg)
 
     for(var i in $game.users) {
@@ -48,8 +61,8 @@ function Game() {
 
       var bunny = new PIXI.Sprite($game.bunnyTexture)
 
-      bunny.position.x = user.x
-      bunny.position.y = user.y
+      bunny.position.x = user.x * BLOCK_SIZE
+      bunny.position.y = user.y * BLOCK_SIZE
 
       $game.stage.addChild(bunny)
     }
