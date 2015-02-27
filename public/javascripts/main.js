@@ -13,6 +13,7 @@ function animate() {
 }
 
 var socket = io()
+var map = [[]]
 
 socket.on('tick', function(msg){
   while(stage.children[0]) { stage.removeChild(stage.children[0]); }
@@ -32,6 +33,11 @@ socket.on('tick', function(msg){
     stage.addChild(bunny)
   }
   console.log(msg)
+})
+
+socket.on('send_map', function(msg) {
+  map = eval(msg)
+  console.log(map)
 })
 
 document.addEventListener('keypress', function(event){
