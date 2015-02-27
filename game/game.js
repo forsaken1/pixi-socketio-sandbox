@@ -21,7 +21,7 @@ var Game = function (io) {
 
   this.disconnect = function(id) {
     $game.users[id] = null
-    $game.users = $game.users.filter(function(e) { return e !== null })
+    $game.users = $game.users.filter(function(e) { return e })
     console.log('user disconnected')
   }
 

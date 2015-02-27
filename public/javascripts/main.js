@@ -1,45 +1,72 @@
-var renderer = new PIXI.WebGLRenderer(800, 600);
+function Game() {
+  $game = this
+  this.map = [[]]
+  this.users = []
+  this.stage = null
 
-document.body.appendChild(renderer.view);
+  this.init_pixi = function() {
+    var renderer = new PIXI.WebGLRenderer(800, 600);
 
-var bunnyTexture = PIXI.Texture.fromImage("images/bunny.png");
-var stage = new PIXI.Stage;
+    document.body.appendChild(renderer.view);
 
-requestAnimationFrame(animate);
+    $game.bunnyTexture = PIXI.Texture.fromImage("images/bunny.png");
+    $game.stage = new PIXI.Stage;
 
-function animate() {
-  renderer.render(stage);
-  requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
+
+    function animate() {
+      renderer.render($game.stage);
+      requestAnimationFrame(animate);
+    }
+    console.log('pixi initialized')
+  }
+
+  this.init_event_listeners = function() {
+    document.addEventListener('keypress', function(event) {
+      $game.socket.emit('move', { keyCode: event.keyCode })
+    });
+  }
+
+  this.init_io = function() {
+    $game.socket = io()
+    $game.socket.on('tick', $game.tick)
+    $game.socket.on('send_map', $game.send_map)
+  }
+
+  this.clearStage = function() {
+    while($game.stage.children[0]) { $game.stage.removeChild($game.stage.children[0]); }
+  }
+
+  this.tick = function(msg) {
+    $game.clearStage()
+    $game.users = eval(msg)
+
+    for(var i in $game.users) {
+      user = $game.users[i]
+      if(!user)
+        continue
+
+      var bunny = new PIXI.Sprite($game.bunnyTexture)
+
+      bunny.position.x = user.x
+      bunny.position.y = user.y
+
+      $game.stage.addChild(bunny)
+    }
+    console.log(msg)
+  }
+
+  this.send_map = function(msg) {
+    $game.map = eval(msg)
+    console.log('map loaded')
+  }
+
+  this.start = function() {
+    $game.init_pixi()
+    $game.init_io()
+    $game.init_event_listeners()
+  }
 }
 
-var socket = io()
-var map = [[]]
-
-socket.on('tick', function(msg){
-  while(stage.children[0]) { stage.removeChild(stage.children[0]); }
-  users = eval(msg)
-
-  for(var i in users)
-  {
-    user = users[i]
-    if(!user)
-      continue
-
-    var bunny = new PIXI.Sprite(bunnyTexture)
-
-    bunny.position.x = user.x
-    bunny.position.y = user.y
-
-    stage.addChild(bunny)
-  }
-  console.log(msg)
-})
-
-socket.on('send_map', function(msg) {
-  map = eval(msg)
-  console.log(map)
-})
-
-document.addEventListener('keypress', function(event){
-  socket.emit('move', { keyCode: event.keyCode })
-});
+var game = new Game()
+game.start()
