@@ -1,11 +1,30 @@
 var User = require('./user')
 
 var Game = function (io) {
-  $game = this
+  var $game = this
   this.users = []
 
-  this.step = function() {
-    io.emit('step', JSON.stringify($game.users))
+  this.tick = function() {
+    io.emit('tick', JSON.stringify($game.users))
+  }
+
+  this.move = function(msg, user) {
+    user.move(msg.keyCode)
+    console.log('user moved')
+  }
+
+  this.shoot = function(msg) {
+    console.log('user shooting!')
+  }
+
+  this.disconnect = function(id) {
+    $game.users[id] = null
+    $game.users = $game.users.filter(function(e) { return e !== null })
+    console.log('user disconnected')
+  }
+
+  this.loop = function() {
+    $game.tick()
   }
 
   this.init_io = function() {
@@ -14,19 +33,13 @@ var Game = function (io) {
       var id = $game.users.length
       var user = new User(id)
       $game.users[id] = user
-      $game.step()
 
-      socket.on('move', function(msg) {
-        user.move(msg.keyCode)
-        $game.step()
-        console.log('user moved')
-      })
+      setInterval($game.loop, 30)
 
-      socket.on('disconnect', function(){
-        $game.users[id] = null
-        $game.step()
-        console.log('user disconnected')
-      })
+      // todo: хак с передачей переменных контекста, исправить
+      socket.on('move', function(msg) { $game.move(msg, user) })
+      socket.on('shoot', function(msg) { $game.shoot(msg) })
+      socket.on('disconnect', function() { $game.disconnect(id) })
     })
   }
 

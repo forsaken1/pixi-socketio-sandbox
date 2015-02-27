@@ -1,4 +1,3 @@
-// You can use either PIXI.WebGLRenderer or PIXI.CanvasRenderer
 var renderer = new PIXI.WebGLRenderer(800, 600);
 
 document.body.appendChild(renderer.view);
@@ -9,14 +8,13 @@ var stage = new PIXI.Stage;
 requestAnimationFrame(animate);
 
 function animate() {
-    renderer.render(stage);
-
-    requestAnimationFrame(animate);
+  renderer.render(stage);
+  requestAnimationFrame(animate);
 }
 
 var socket = io()
 
-socket.on('step', function(msg){
+socket.on('tick', function(msg){
   while(stage.children[0]) { stage.removeChild(stage.children[0]); }
   users = eval(msg)
 
@@ -33,6 +31,7 @@ socket.on('step', function(msg){
 
     stage.addChild(bunny)
   }
+  console.log(msg)
 })
 
 document.addEventListener('keypress', function(event){

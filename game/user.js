@@ -1,6 +1,7 @@
 var User = function(id) {
-  $user = this
-  SPEED = 100
+  var $user = this
+  var SPEED = 100
+
   this.id = id
   this.x = Math.floor((Math.random() * 700) + 1)
   this.y = Math.floor((Math.random() * 500) + 1)
@@ -23,4 +24,5 @@ var User = function(id) {
     }
   }
 }
+
 module.exports = User
