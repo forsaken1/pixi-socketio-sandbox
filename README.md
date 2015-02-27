@@ -1,2 +1,2 @@
-# bunny-pixi-socketio-example
-Веселуха с кроликами
+# pixi-socketio-example
+Поиграться с nodejs
