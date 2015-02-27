@@ -1,4 +1,6 @@
-module.exports.Game = function (io, User) {
+var User = require('./user')
+
+var Game = function (io) {
   $game = this
   this.users = []
 
@@ -31,6 +33,6 @@ module.exports.Game = function (io, User) {
   this.start = function() {
     $game.init_io()
   }
-
-  return this
 }
+
+module.exports = Game

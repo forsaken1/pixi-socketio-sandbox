@@ -36,5 +36,6 @@ app.listen(3001, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 })
 
-var game = require('./game/game.js').Game(io, require('./game/user.js').User)
+var Game = require('./game/game')
+var game = new Game(io)
 game.start()
