@@ -13,14 +13,18 @@ function Game() {
     document.body.appendChild(renderer.view);
 
     $game.sprites = {
-      t1: new PIXI.Sprite(PIXI.Texture.fromImage("images/t1.png")),
-      t2: new PIXI.Sprite(PIXI.Texture.fromImage("images/t2.png")),
-      t3: new PIXI.Sprite(PIXI.Texture.fromImage("images/t3.png")),
-      t4: new PIXI.Sprite(PIXI.Texture.fromImage("images/t4.png")),
-      t5: new PIXI.Sprite(PIXI.Texture.fromImage("images/t5.png")),
-      t6: new PIXI.Sprite(PIXI.Texture.fromImage("images/t6.png")),
-      t7: new PIXI.Sprite(PIXI.Texture.fromImage("images/t7.png")),
-      t8: new PIXI.Sprite(PIXI.Texture.fromImage("images/t8.png"))
+      t1: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t1.png")) },
+      t2: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t2.png")) },
+      t3: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t3.png")) },
+      t4: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t4.png")) },
+      t5: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t5.png")) },
+      t6: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t6.png")) },
+      t7: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t7.png")) },
+      t8: function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/t8.png")) },
+      '&': function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/beton.png")) },
+      '#': function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/brick.png")) },
+      '$': function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/water.png")) },
+      '*': function() { return new PIXI.Sprite(PIXI.Texture.fromImage("images/tree.png")) }
     }
     $game.stage = new PIXI.Stage
     $game.stage.setBackgroundColor(0xFFFFFF)
@@ -65,7 +69,7 @@ function Game() {
   }
 
   this.add_user = function(hash) {
-    var user = $game.sprites['t' + hash.color]
+    var user = $game.sprites['t' + hash.color]()
     
     user.pivot.x = 25
     user.pivot.y = 25
@@ -76,8 +80,25 @@ function Game() {
     $game.stage.addChild(user)
   }
 
+  this.paint_map = function() {
+    if(!$game.map) return
+
+    for(var i in $game.map) {
+      var map_arr = $game.map[i]
+      for(var j in map_arr) {
+        var map_item = map_arr[j]
+        if(map_item == '.') continue
+        var map_sprite = $game.sprites[map_item]()
+        map_sprite.position.x = (j) * BLOCK_SIZE
+        map_sprite.position.y = (i) * BLOCK_SIZE
+        $game.stage.addChild(map_sprite)
+      }
+    }
+  }
+
   this.tick = function(msg) {
     $game.clear_stage()
+    $game.paint_map()
     $game.users = eval(msg)
 
     for(var i in $game.users) {
