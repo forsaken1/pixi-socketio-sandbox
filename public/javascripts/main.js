@@ -12,8 +12,9 @@ function Game() {
 
     document.body.appendChild(renderer.view);
 
-    $game.bunnyTexture = PIXI.Texture.fromImage("images/bunny.png");
+    $game.user_texture = PIXI.Texture.fromImage("images/t1.png");
     $game.stage = new PIXI.Stage;
+    $game.stage.setBackgroundColor(0xFFFFFF)
 
     requestAnimationFrame(animate);
 
@@ -50,21 +51,22 @@ function Game() {
     while($game.stage.children[0]) { $game.stage.removeChild($game.stage.children[0]); }
   }
 
+  this.add_user = function(hash) {
+    var user = new PIXI.Sprite($game.user_texture)
+
+    user.position.x = hash.x * BLOCK_SIZE
+    user.position.y = hash.y * BLOCK_SIZE
+
+    $game.stage.addChild(user)
+  }
+
   this.tick = function(msg) {
     $game.clear_stage()
     $game.users = eval(msg)
 
     for(var i in $game.users) {
       user = $game.users[i]
-      if(!user)
-        continue
-
-      var bunny = new PIXI.Sprite($game.bunnyTexture)
-
-      bunny.position.x = user.x * BLOCK_SIZE
-      bunny.position.y = user.y * BLOCK_SIZE
-
-      $game.stage.addChild(bunny)
+      user && $game.add_user(user)
     }
     console.log(msg)
   }
