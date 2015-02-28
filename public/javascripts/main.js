@@ -39,7 +39,10 @@ function Game() {
   }
 
   this.init_event_listeners = function() {
-    var direction = { 37: 'l', 38: 'u', 39: 'r', 40: 'd' }
+    var direction = { 
+      37: 'l', 38: 'u', 39: 'r', 40: 'd',
+      65: 'l', 87: 'u', 68: 'r', 83: 'd'
+    }
 
     document.addEventListener('keydown', function(event) {
       $game.socket.emit('move_start', { direction: direction[event.keyCode] })
@@ -69,7 +72,7 @@ function Game() {
   }
 
   this.add_user = function(hash) {
-    var user = $game.sprites['t' + hash.color]()
+    var user = $game.sprites['t' + hash.tank_type]()
     
     user.pivot.x = 25
     user.pivot.y = 25
@@ -87,10 +90,10 @@ function Game() {
       var map_arr = $game.map[i]
       for(var j in map_arr) {
         var map_item = map_arr[j]
-        if(map_item == '.') continue
+        if(map_item == '.' || map_item == '@') continue
         var map_sprite = $game.sprites[map_item]()
-        map_sprite.position.x = (j) * BLOCK_SIZE
-        map_sprite.position.y = (i) * BLOCK_SIZE
+        map_sprite.position.x = j * BLOCK_SIZE
+        map_sprite.position.y = i * BLOCK_SIZE
         $game.stage.addChild(map_sprite)
       }
     }

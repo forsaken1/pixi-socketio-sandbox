@@ -1,10 +1,20 @@
 var User = require('./user')
 var Map = require('./map')
+//var Border = require('./border')
 
 var Game = function (io) {
   var $game = this
   this.users = []
+  this.borders = []
   this.map = new Map()
+
+  for(var i in $game.map) {
+    $game.borders[i] = []
+    for(var j in $game.map[i]) {
+      var letters = { '#': true, '&': true, '$': true }
+      $game.borders[i][j] = letters[$game.map[i][j]] || false
+    }
+  }
 
   this.tick = function() {
     io.emit('tick', JSON.stringify($game.each_user(function(user) { return user.to_json() })))
@@ -33,14 +43,14 @@ var Game = function (io) {
 
   this.each_user = function(func) {
     var result = []
-    for(var i = 0; i < $game.users.length; ++i) {
+    for(var i in $game.users) {
       $game.users[i] && (result[result.length] = func($game.users[i]))
     }
     return result
   }
 
   this.loop = function() {
-    $game.each_user(function(user) { user.tick() })
+    $game.each_user(function(user) { user.tick($game.borders) })
     $game.tick()
   }
 

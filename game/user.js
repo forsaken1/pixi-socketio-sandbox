@@ -4,9 +4,9 @@ var User = function(id) {
   var ACCELERATE = 0.001
 
   this.id = id
-  this.color = Math.floor((Math.random() * 8) + 1)
-  this.x = Math.floor((Math.random() * 16) + 1)
-  this.y = Math.floor((Math.random() * 12) + 1)
+  this.tank_type = Math.floor((Math.random() * 8) + 1)
+  this.x = Math.floor((Math.random() * 15) + 1)
+  this.y = Math.floor((Math.random() * 11) + 1)
   this.dx = 0
   this.dy = 0
   this.direction = 'u'
@@ -48,9 +48,20 @@ var User = function(id) {
 
   }
 
-  this.tick = function() {
-    $user.x += $user.dx
-    $user.y += $user.dy
+  this.is_collision = function(borders) {
+    return {
+      l: function() { return borders[parseInt($user.y)][parseInt($user.x - 1)] },
+      u: function() { return borders[parseInt($user.y - 1)][parseInt($user.x)] },
+      r: function() { return borders[parseInt($user.y)][parseInt($user.x + 1)] },
+      d: function() { return borders[parseInt($user.y + 1)][parseInt($user.x)] }
+    }[$user.direction]()
+  }
+
+  this.tick = function(borders) {
+    if(!$user.is_collision(borders)) {
+      $user.x += $user.dx
+      $user.y += $user.dy
+    }
   }
 
   this.to_json = function() {
@@ -58,7 +69,7 @@ var User = function(id) {
       x: $user.x,
       y: $user.y,
       direction: $user.direction,
-      color: $user.color
+      tank_type: $user.tank_type
     }
   }
 }
