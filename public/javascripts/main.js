@@ -13,7 +13,14 @@ function Game() {
     document.body.appendChild(renderer.view);
 
     $game.sprites = {
-      t1: new PIXI.Sprite(PIXI.Texture.fromImage("images/t1.png"))
+      t1: new PIXI.Sprite(PIXI.Texture.fromImage("images/t1.png")),
+      t2: new PIXI.Sprite(PIXI.Texture.fromImage("images/t2.png")),
+      t3: new PIXI.Sprite(PIXI.Texture.fromImage("images/t3.png")),
+      t4: new PIXI.Sprite(PIXI.Texture.fromImage("images/t4.png")),
+      t5: new PIXI.Sprite(PIXI.Texture.fromImage("images/t5.png")),
+      t6: new PIXI.Sprite(PIXI.Texture.fromImage("images/t6.png")),
+      t7: new PIXI.Sprite(PIXI.Texture.fromImage("images/t7.png")),
+      t8: new PIXI.Sprite(PIXI.Texture.fromImage("images/t8.png"))
     }
     $game.stage = new PIXI.Stage
     $game.stage.setBackgroundColor(0xFFFFFF)
@@ -58,7 +65,7 @@ function Game() {
   }
 
   this.add_user = function(hash) {
-    var user = $game.sprites.t1
+    var user = $game.sprites['t' + hash.color]
     
     user.pivot.x = 25
     user.pivot.y = 25

@@ -4,8 +4,9 @@ var User = function(id) {
   var ACCELERATE = 0.001
 
   this.id = id
-  this.x = Math.floor((Math.random() * 8) + 1)
-  this.y = Math.floor((Math.random() * 6) + 1)
+  this.color = Math.floor((Math.random() * 8) + 1)
+  this.x = Math.floor((Math.random() * 16) + 1)
+  this.y = Math.floor((Math.random() * 12) + 1)
   this.dx = 0
   this.dy = 0
   this.direction = 'u'
@@ -56,7 +57,8 @@ var User = function(id) {
     return {
       x: $user.x,
       y: $user.y,
-      direction: $user.direction
+      direction: $user.direction,
+      color: $user.color
     }
   }
 }
