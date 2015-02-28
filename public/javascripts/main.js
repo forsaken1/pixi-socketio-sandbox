@@ -12,8 +12,10 @@ function Game() {
 
     document.body.appendChild(renderer.view);
 
-    $game.user_texture = PIXI.Texture.fromImage("images/t1.png");
-    $game.stage = new PIXI.Stage;
+    $game.sprites = {
+      t1: new PIXI.Sprite(PIXI.Texture.fromImage("images/t1.png"))
+    }
+    $game.stage = new PIXI.Stage
     $game.stage.setBackgroundColor(0xFFFFFF)
 
     requestAnimationFrame(animate);
@@ -51,9 +53,16 @@ function Game() {
     while($game.stage.children[0]) { $game.stage.removeChild($game.stage.children[0]); }
   }
 
-  this.add_user = function(hash) {
-    var user = new PIXI.Sprite($game.user_texture)
+  function to_rad(degree) {
+    return degree * Math.PI / 180
+  }
 
+  this.add_user = function(hash) {
+    var user = $game.sprites.t1
+    
+    user.pivot.x = 25
+    user.pivot.y = 25
+    user.rotation = { l: to_rad(270), u: 0, r: to_rad(90), d: to_rad(180) }[hash.direction]
     user.position.x = hash.x * BLOCK_SIZE
     user.position.y = hash.y * BLOCK_SIZE
 

@@ -8,12 +8,29 @@ var User = function(id) {
   this.y = Math.floor((Math.random() * 6) + 1)
   this.dx = 0
   this.dy = 0
+  this.direction = 'u'
 
   this.move = {
-    l: function() { $user.dx = - SPEED },
-    u: function() { $user.dy = - SPEED },
-    r: function() { $user.dx = SPEED },
-    d: function() { $user.dy = SPEED }
+    l: function() {
+      $user.dx = - SPEED
+      $user.dy = 0
+      $user.direction = 'l'
+    },
+    u: function() {
+      $user.dx = 0
+      $user.dy = - SPEED
+      $user.direction = 'u'
+    },
+    r: function() {
+      $user.dx = SPEED
+      $user.dy = 0
+      $user.direction = 'r'
+    },
+    d: function() {
+      $user.dx = 0
+      $user.dy = SPEED
+      $user.direction = 'd'
+    }
   }
 
   this.move_start = function(direction) {
@@ -39,8 +56,7 @@ var User = function(id) {
     return {
       x: $user.x,
       y: $user.y,
-      dx: $user.dx,
-      dy: $user.dy
+      direction: $user.direction
     }
   }
 }
