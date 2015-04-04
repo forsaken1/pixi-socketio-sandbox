@@ -77,8 +77,8 @@ function Game() {
     user.pivot.x = 25
     user.pivot.y = 25
     user.rotation = { l: to_rad(270), u: 0, r: to_rad(90), d: to_rad(180) }[hash.direction]
-    user.position.x = hash.x * BLOCK_SIZE
-    user.position.y = hash.y * BLOCK_SIZE
+    user.position.x = hash.x * BLOCK_SIZE + BLOCK_SIZE / 2
+    user.position.y = hash.y * BLOCK_SIZE + BLOCK_SIZE / 2
 
     $game.stage.addChild(user)
   }
