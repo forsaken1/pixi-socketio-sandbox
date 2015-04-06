@@ -1,4 +1,4 @@
-var SPEED = 1 / 3
+var SPEED = 1 / 9
 var ACCELERATE = SPEED / 80
 
 var User = function(id) {

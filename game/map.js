@@ -1,7 +1,7 @@
 var Field = require('./field')
 
 function float_to_int(num) {
-  return parseInt(num)
+  return Math.floor(parseFloat(num))
 }
 
 var Map = function() {
@@ -44,17 +44,18 @@ var Map = function() {
     return {
       l: function() {
         //console.log($map.get( float_to_int(user.y), float_to_int(user.x - 1) ).is_wall())
+        //console.log(float_to_int(user.y) + ' ' + (float_to_int(user.x) ))
         //console.log($map)
-        return user.x <= 0 + 0.3 || $map.get( float_to_int(user.y), float_to_int(user.x - 1) ).is_wall()
+        return user.x <= 0.1 || ( user.x >= 1 && $map.get( float_to_int(user.y), float_to_int(user.x) - 1 ).is_wall() )
       },
       u: function() {
-        return user.y <= 0 + 0.3 || $map.get( float_to_int(user.y - 1), float_to_int(user.x) ).is_wall()
+        return user.y <= 0.1 || ( user.y >= 1 && $map.get( float_to_int(user.y) - 1, float_to_int(user.x) ).is_wall() )
       },
       r: function() {
-        return user.x >= $map.width - 1 || $map.get( float_to_int(user.y), float_to_int(user.x + 1) ).is_wall()
+        return user.x >= $map.width - 1.1 || $map.get( float_to_int(user.y), float_to_int(user.x) + 1 ).is_wall()
       },
       d: function() {
-        return user.y >= $map.height - 1 || $map.get( float_to_int(user.y + 1), float_to_int(user.x) ).is_wall()
+        return user.y >= $map.height - 1.1 || $map.get( float_to_int(user.y) + 1, float_to_int(user.x) ).is_wall()
       }
     }[user.direction]()
   }
