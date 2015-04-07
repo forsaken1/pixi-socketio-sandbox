@@ -1,15 +1,17 @@
-var Field = function(type) {
-  $field = this
+function Field(type) {
+  if (!(this instanceof Field)) {
+    return new Field(type);
+  }
   this.type = type
   this.wall = type == '#' || type == '&' || type == '$'
-  
-  this.is_wall = function() {
-    return $field.wall
-  }
+}
 
-  this.not_wall = function() {
-    return ! $field.wall
-  }
+Field.prototype.is_wall = function() {
+  return this.wall
+}
+
+Field.prototype.not_wall = function() {
+  return ! this.wall
 }
 
 module.exports = Field
