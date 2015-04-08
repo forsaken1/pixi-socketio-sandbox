@@ -1,6 +1,3 @@
-var SPEED = 1 / 9
-var ACCELERATE = SPEED / 80
-
 var User = function(id) {
   var $user = this
   this.id = id
@@ -10,26 +7,29 @@ var User = function(id) {
   this.dx = 0
   this.dy = 0
   this.direction = 'u'
+  this.tasks = []
+  this.speed = 1 / 9
+  this.accelerate = this.speed / 80
 
   this.move = {
     l: function() {
-      $user.dx = - SPEED
+      $user.dx = - $user.speed
       $user.dy = 0
       $user.direction = 'l'
     },
     u: function() {
       $user.dx = 0
-      $user.dy = - SPEED
+      $user.dy = - $user.speed
       $user.direction = 'u'
     },
     r: function() {
-      $user.dx = SPEED
+      $user.dx = $user.speed
       $user.dy = 0
       $user.direction = 'r'
     },
     d: function() {
       $user.dx = 0
-      $user.dy = SPEED
+      $user.dy = $user.speed
       $user.direction = 'd'
     }
   }
@@ -62,6 +62,17 @@ var User = function(id) {
       direction: $user.direction,
       tank_type: $user.tank_type
     }
+  }
+
+  this.terminal = function(msg) {
+    return {
+      toleft: function() {
+        $user.direction = 'l'
+      },
+      move: function() {
+        $user.move['u']()
+      }
+    }[msg]()
   }
 }
 

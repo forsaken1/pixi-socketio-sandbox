@@ -6,6 +6,7 @@ function Game() {
   this.users = []
   this.stage = null
   this.key_down_code = undefined
+  this.terminal = document.getElementById('terminal')
 
   this.init_pixi = function() {
     var renderer = new PIXI.WebGLRenderer(800, 600);
@@ -55,6 +56,13 @@ function Game() {
         $game.key_down_code = undefined
       }
     });
+
+    $game.terminal.addEventListener("keydown", function(e) {
+        if(e.keyCode == 13) {
+          $game.socket.emit('terminal', this.value)
+          this.value = ''
+        }
+    }, false);
   }
 
   this.init_io = function() {

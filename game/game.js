@@ -12,21 +12,6 @@ var Game = function (io) {
     io.emit('tick', JSON.stringify($game.each_user(function(user) { return user.to_json() })))
   }
 
-  this.move_start = function(msg, user) {
-    user.move_start(msg.direction)
-    console.log('user move started')
-  }
-
-  this.move_stop = function(msg, user) {
-    user.move_stop()
-    console.log('user move stopped')
-  }
-
-  this.shoot = function(msg, user) {
-    user.shoot()
-    console.log('user shooting!')
-  }
-
   this.disconnect = function(id) {
     $game.users[id] = null
     $game.users = $game.users.filter(function(e) { return e })
@@ -58,10 +43,11 @@ var Game = function (io) {
       $game.send_map()
 
       // todo: хак с передачей переменных контекста, исправить
-      socket.on('move_start', function(msg) { $game.move_start(msg, user) })
-      socket.on('move_stop', function(msg) { $game.move_stop(msg, user) })
-      socket.on('shoot', function(msg) { $game.shoot(msg, user) })
+      socket.on('move_start', function(msg) { user.move_start(msg.direction); console.log('user move started') })
+      socket.on('move_stop', function(msg) { user.move_stop(); console.log('user move stopped') })
+      socket.on('shoot', function(msg) { user.shoot() })
       socket.on('disconnect', function() { $game.disconnect(id) })
+      socket.on('terminal', function(msg) { user.terminal(msg) })
 
       console.log('a user connected')
     })
